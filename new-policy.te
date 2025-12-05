@@ -22,6 +22,9 @@ require {
 	attribute file_type;
 	#process
 	class process { execmem setcap setrlimit setsched };
+	#net
+	type unreserved_port_t;
+	type node_t;
 
 }
 #app_t
@@ -53,7 +56,8 @@ allow staff_t app_exec_t:file {relabelfrom relabelto};
 
 allow staff_t app_file_t:file {getattr read open write};
 allow staff_t app_file_t:dir {getattr search read open write add_name remove_name create rename};
-allow staff_t app_exec_t:file {execute read open};
+allow staff_t app_exec_t:file {execute read open write};
+allow staff_t app_exec_t:file unlink;
 
 
 #allow app_t
@@ -105,4 +109,8 @@ pulseaudio_stream_connect(app_t)
 userdom_mmap_user_home_content_files(app_t)
 userdom_use_inherited_user_ptys(app_t)
 
-
+#net
+allow app_t unreserved_port_t:tcp_socket name_bind;
+allow app_t self:tcp_socket {create bind setopt accept listen read write};
+allow app_t node_t:tcp_socket node_bind;
+allow staff_t app_t:process { noatsecure rlimitinh siginh };
