@@ -7,16 +7,8 @@ require {
 	type staff_t;
 	#socket
 	class unix_stream_socket connectto;
-	type pulseaudio_home_t;
-        type sound_device_t;
-	type pulseaudio_exec_t;
 	class netlink_kobject_uevent_socket { bind create getattr setopt };
         class unix_dgram_socket { connect create };
-	#tmp
-	type tmpfs_t;
-	type tmp_t;
-	#proc
-	type proc_t;
 	#file
 	class file { execute execute_no_trans getattr lock map open read write };
 	attribute file_type;
