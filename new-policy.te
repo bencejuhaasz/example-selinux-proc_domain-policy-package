@@ -4,7 +4,6 @@ require {
 	#staff
 	type staff_t;
 	role staff_r;
-	type staff_t;
 	#socket
 	class unix_stream_socket connectto;
 	class netlink_kobject_uevent_socket { bind create getattr setopt };
