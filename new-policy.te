@@ -25,6 +25,8 @@ require {
 	#net
 	type unreserved_port_t;
 	type node_t;
+	#devpts
+	type user_devpts_t;
 
 }
 #app_t
@@ -47,8 +49,6 @@ domtrans_pattern(staff_t, app_exec_t, app_t)
 role staff_r types {app_t app_file_t app_exec_t};
 
 
-alsa_read_rw_config(app_t)
-
 #allow staff_t
 allow staff_t app_file_t:dir {relabelfrom relabelto};
 allow staff_t app_file_t:file {relabelfrom relabelto};
@@ -67,47 +67,12 @@ allow app_t self:unix_dgram_socket { connect create };
 allow app_t app_file_t:dir { open read getattr search write add_name remove_name create rename};
 allow app_t app_file_t:file { getattr open read execute map write create rename unlink};
 
-allow app_t tmpfs_t:file { map read write };
-allow app_t tmp_t:file {create write open read};
-allow app_t proc_t:file { getattr open read };
-
 allow app_t self:netlink_kobject_uevent_socket { bind create getattr setopt };
 allow app_t self:process { setcap setrlimit setsched  execmem};
 
-#tmp
-fs_list_tmpfs(app_t)
-#files_manage_generic_tmp_dirs(app_t)
-fs_getattr_tmpfs(app_t)
-#userdom_manage_tmp_dirs(app_t)
-#userdom_manage_tmp_files(app_t)
-fs_rw_inherited_tmpfs_files(staff_t)
-
-#socket
-dbus_stream_connect_system_dbusd(app_t)
-fs_read_cgroup_files(app_t)
-userdom_stream_connect(app_t)
-
 #dev
-dev_list_sysfs(app_t)
-dev_read_sysfs(app_t)
-dev_rw_dri(app_t)
-logging_create_devlog_dev(app_t)
-udev_read_db(app_t)
-
-#kernel
-kernel_dgram_send(app_t)
-kernel_read_vm_sysctls(app_t)
-
-#x
-xserver_manage_user_xauth(app_t)
-
-#alsa
-pulseaudio_stream_connect(app_t)
-
-
-#staff
-userdom_mmap_user_home_content_files(app_t)
-userdom_use_inherited_user_ptys(app_t)
+allow app_t user_devpts_t:chr_file { read write };
+allow app_t user_devpts_t:chr_file getattr;
 
 #net
 allow app_t unreserved_port_t:tcp_socket name_bind;
